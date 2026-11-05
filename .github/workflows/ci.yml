@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+
+  libretro:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build libretro core (macOS, iOS)
+        run: Scripts/build-libretro.sh macos ios
+      - name: Smoke-test exports
+        run: |
+          test "$(nm -gU dist/macos/bismuth_libretro.dylib | grep -c ' _retro_')" -eq 25
+          test "$(nm -gU dist/ios/bismuth.libretro.framework/bismuth.libretro | grep -c ' _retro_')" -eq 25
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bismuth-libretro
+          path: |
+            dist/macos/bismuth_libretro.dylib
+            dist/ios/bismuth.libretro.framework
+            dist/bismuth_libretro.info
