@@ -15,8 +15,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIST="$ROOT/dist"
 VERSION="1.0.0"
-MIN_IOS="16.0"
-MIN_TVOS="16.0"
+MIN_IOS="15.0"
+MIN_TVOS="15.0"
 
 # iOS SDKs need a full Xcode, not just the Command Line Tools.
 if [[ -z "${DEVELOPER_DIR:-}" ]]; then

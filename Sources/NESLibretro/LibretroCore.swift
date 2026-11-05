@@ -202,7 +202,8 @@ final class LibretroCore {
             let name = romPath.lowercased()
             let palHints = ["(e)", "(europe)", "(pal)", "(australia)", "(germany)", "(france)", "(spain)",
                             "(italy)", "(sweden)", "(netherlands)", "(uk)", "(scandinavia)"]
-            return palHints.contains(where: { name.contains($0) }) ? .pal : .ntsc
+            let bytes = Array(name.utf8)
+            return palHints.contains(where: { bytes.containsSequence(Array($0.utf8)) }) ? .pal : .ntsc
         }
     }
 
@@ -437,5 +438,16 @@ final class LibretroCore {
                 log("Ignoring invalid cheat \"\(code)\"", level: RETRO_LOG_WARN)
             }
         }
+    }
+}
+
+private extension Array where Element == UInt8 {
+    /// Substring search that does not need iOS 16's `String.contains(_:)`.
+    func containsSequence(_ needle: [UInt8]) -> Bool {
+        guard !needle.isEmpty, needle.count <= count else { return needle.isEmpty }
+        for start in 0...(count - needle.count) where self[start..<start + needle.count].elementsEqual(needle) {
+            return true
+        }
+        return false
     }
 }

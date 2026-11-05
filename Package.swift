@@ -13,8 +13,8 @@ let package = Package(
     name: "Bismuth",
     platforms: [
         .macOS(.v13),
-        .iOS(.v16),
-        .tvOS(.v16),
+        .iOS(.v15),
+        .tvOS(.v15),
     ],
     products: [
         // The emulator: CPU, PPU, APU, mappers, input (pads, Zapper, Four Score), save states, cheats.
